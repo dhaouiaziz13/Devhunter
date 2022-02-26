@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", require("./routes/auth"));
-app.use("/api/create", require("./routes/post"));
+app.use("/api/posts", require("./routes/post"));
 app.use("/api/user", require("./routes/portfolio"));
 ///////////////////////////////////////////
 app.use(function (req, res, next) {

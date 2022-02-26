@@ -90,6 +90,10 @@ model image {
   comment comment?
 }
 
+model accepted_offers {
+  id Int @id @default(autoincrement())
+}
+
 model joboffers {
   id              Int      @id @default(autoincrement())
   user            user?    @relation(fields: [userID], references: [id])
