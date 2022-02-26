@@ -21,18 +21,27 @@ const postService = {
       },
     });
   },
-  deletepost: ({ id }) => {
-    return prisma.post.delete({
+  deletepost: async ({ id }) => {
+    return await prisma.post.delete({
       where: {
         id,
       },
     });
   },
-  deletecomment: ({ id }) => {
-    return prisma.comment.delete({
+  deletecomment: async ({ id }) => {
+    return await prisma.comment.delete({
       where: {
         id,
       },
+    });
+  },
+  getposts: async ({ id, page }) => {
+    return await prisma.post.findMany({
+      where: {
+        id,
+      },
+      skip: parseInt(page) * 5,
+      take: 5,
     });
   },
 };

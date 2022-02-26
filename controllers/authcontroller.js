@@ -1,11 +1,11 @@
 const authService = require("../service/auth");
 var jwt = require("jsonwebtoken");
-const _error =require("../error")
+const _error = require("../error");
 
-exports.login = async (req,res) => {
+exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const resp =await authService.login({
+    const resp = await authService.login({
       email,
       password,
     });
