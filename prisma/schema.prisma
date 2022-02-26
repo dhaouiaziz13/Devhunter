@@ -92,6 +92,7 @@ model image {
 
 model accepted_offers {
   id Int @id @default(autoincrement())
+  
 }
 
 model joboffers {
