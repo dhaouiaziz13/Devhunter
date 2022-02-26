@@ -1,0 +1,167 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model blacklisted_tokens {
+  id    Int    @id @default(autoincrement())
+  token String
+}
+
+enum user_type {
+  DEV
+  CLIENT
+}
+
+model account {
+  id       Int    @id @default(autoincrement())
+  user     user?  @relation(fields: [userID], references: [id])
+  userID   Int
+  email    String @unique
+  password String
+
+}
+
+model user {
+  id              Int               @id @default(autoincrement())
+  fname           String
+  lname           String
+  type            user_type
+  posts           post[]
+  comments        comment[]
+  date            DateTime          @default(now())
+  skills          skill[]
+  portfolio       portfolio?        @relation(fields: [portfolioID], references: [id])
+  portfolioID     Int?              @unique
+  skill_rating    skill_rating?
+  overall_rating  overall_rating?
+  failed_skills   failed_skills[]
+  verified_skills verified_skills[]
+  badges          badges[]
+  accounts        account[]
+  joboffers       joboffers?
+}
+
+enum badges_names {
+  VIRGIN
+  HAD_HIS_FIRST_TIME
+  FIVE_TIMES_CHAMPION
+  NEXT_LEGEND
+  DONT_YOU_GET_TIRED
+  HUNDRED_DAYS_OF_KILLIN_IT
+  YOURE_A_HUNTER
+  MAMMA_MIA
+}
+
+model badges {
+  id    Int          @id @default(autoincrement())
+  name  badges_names
+  users user[]
+}
+
+model portfolio {
+  id    Int    @id @default(autoincrement())
+  title String
+  user  user?
+}
+
+model post {
+  id       Int       @id @default(autoincrement())
+  date     DateTime  @default(now())
+  user     user?     @relation(fields: [userID], references: [id])
+  content  String
+  userID   Int
+  comments comment[]
+  images   image[]
+}
+
+model image {
+  id      Int      @id @default(autoincrement())
+  url     String
+  post    post?    @relation(fields: [postID], references: [id])
+  postID  Int
+  comment comment?
+}
+
+model joboffers {
+  id              Int      @id @default(autoincrement())
+  user            user?    @relation(fields: [userID], references: [id])
+  userID          Int      @unique
+  required_skills skill[]
+  description     String
+  price           Int
+  date            DateTime @default(now())
+  deadline        DateTime
+  title           String
+  contact         String
+}
+
+model comment {
+  id      Int      @id @default(autoincrement())
+  date    DateTime @default(now())
+  content String
+  post    post?    @relation(fields: [postID], references: [id])
+  postID  Int
+  user    user?    @relation(fields: [userID], references: [id])
+  userID  Int
+  image   image?   @relation(fields: [imageID], references: [id])
+  imageID Int      @unique
+}
+
+model failed_skills {
+  id      Int      @id @default(autoincrement())
+  user    user?    @relation(fields: [userID], references: [id])
+  userID  Int
+  skill   skill?   @relation(fields: [skillID], references: [id])
+  skillID Int
+  date    DateTime @default(now())
+}
+
+model verified_skills {
+  id      Int      @id @default(autoincrement())
+  user    user?    @relation(fields: [userID], references: [id])
+  userID  Int
+  skill   skill?   @relation(fields: [skillID], references: [id])
+  skillID Int
+  date    DateTime @default(now())
+}
+
+model skill {
+  id          Int               @id @default(autoincrement())
+  users       user[]
+  name        String
+  tests       skill_question[]
+  failed      failed_skills[]
+  verified    verified_skills[]
+  joboffers   joboffers?        @relation(fields: [joboffersId], references: [id])
+  joboffersId Int?
+}
+
+model skill_question {
+  id       Int    @id @default(autoincrement())
+  skill    skill? @relation(fields: [skillID], references: [id])
+  skillID  Int
+  question String
+  answer   String
+}
+
+model overall_rating {
+  id     Int    @id @default(autoincrement())
+  title  String
+  user   user?  @relation(fields: [userID], references: [id])
+  userID Int    @unique
+}
+
+model skill_rating {
+  id     Int    @id @default(autoincrement())
+  title  String
+  user   user?  @relation(fields: [userID], references: [id])
+  userID Int    @unique
+}
